@@ -2,7 +2,8 @@ defmodule Nelli.Socket do
   @moduledoc """
   Wrapper for plain and (soon) tls sockets.
 
-  Based on [elli_tcp.erl](https://github.com/knutin/elli/blob/master/src/elli_tcp.erl) which itself is based on [mochiweb_socket.erl](https://github.com/mochi/mochiweb/blob/master/src/mochiweb_socket.erl).
+  Based on [elli_tcp.erl](https://github.com/knutin/elli/blob/master/src/elli_tcp.erl)
+  which itself is based on [mochiweb_socket.erl](https://github.com/mochi/mochiweb/blob/master/src/mochiweb_socket.erl).
   """
 
   @type t :: {:plain, :inet.socket} # | {:tls, :ssl.sslsocket}
