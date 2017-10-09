@@ -1,6 +1,6 @@
 defmodule Nelli.Socket do
   @moduledoc """
-  Wrapper for plain and (soon) tls sockets.
+  Wrapper for plain and (maybe) tls sockets.
 
   Based on [elli_tcp.erl](https://github.com/knutin/elli/blob/master/src/elli_tcp.erl)
   which itself is based on [mochiweb_socket.erl](https://github.com/mochi/mochiweb/blob/master/src/mochiweb_socket.erl).
@@ -14,11 +14,6 @@ defmodule Nelli.Socket do
   @type reason :: :closed | :inet.posix
   @type peername :: {:inet.ip_address, :inet.port_number} | :inet.returned_non_ip_address
 
-
-  # defmodule SendfileError do
-  #   defexception
-  # end
-
   @doc """
   Sets up a socket to listen on port on the local host.
 
@@ -31,18 +26,6 @@ defmodule Nelli.Socket do
       {:error, reason} -> {:error, reason}
     end
   end
-  # def listen(:tls, port, opts) do
-  #   case :ssl.listen(port, opts) do
-  #     {:ok, listen_socket} ->
-  #       {:ok, {:tls, listen_socket}}
-  #     {:error, reason} ->
-  #       {:error, reason}
-  #   end
-  # end
-
-  # def listen!(type, port, opts) do
-
-  # end
 
   @doc """
   Accepts an incoming connection request on a listening socket.
@@ -60,23 +43,6 @@ defmodule Nelli.Socket do
         {:error, reason}
     end
   end
-  # def accept({:tls, listen_socket}, server, timeout) do
-  #   case :ssl.transport_accept(listen_socket, timeout) do
-  #     {:ok, accept_socket} ->
-  #       GenServer.cast(server, :accepted)
-  #       case :ssl.ssl_accept(accept_socket, timeout) do
-  #         :ok ->
-  #           {:ok, {:tls, accept_socket}}
-  #         {:error, :closed} ->
-  #           {:error, :econnaborted}
-  #         {:error, reason} ->
-  #           {:error, reason}
-  #       end
-
-  #     {:error, reason} ->
-  #       {:error, reason}
-  #   end
-  # end
 
   @doc """
   Receives a packet from a socket.
@@ -87,9 +53,6 @@ defmodule Nelli.Socket do
   def recv({:plain, socket}, size, timeout) do
     :gen_tcp.recv(socket, size, timeout)
   end
-  # def recv({:tls, socket}, size, timeout) do
-  #   :ssl.recv(socket, size, timeout)
-  # end
 
   @doc """
   Sends a packet on a socket.
@@ -100,9 +63,6 @@ defmodule Nelli.Socket do
   def send({:plain, socket}, data) do
     :gen_tcp.send(socket, data)
   end
-  # def send({:tls, socket}, data) do
-  #   :ssl.send(socket, data)
-  # end
 
   @doc """
   Closes a TCP socket.
@@ -113,9 +73,6 @@ defmodule Nelli.Socket do
   def close({:plain, socket}) do
     :gen_tcp.close(socket)
   end
-  # def close({:tls, socket}) do
-  #   :ssl.close(socket)
-  # end
 
   @doc """
   Sets one or more options for a socket.
@@ -126,17 +83,6 @@ defmodule Nelli.Socket do
   def setopts({:plain, socket}, opts) do
     :inet.setopts(socket, opts)
   end
-  # def setopts({:tls, socket}, opts) do
-  #   :ssl.setopts(socket, opts)
-  # end
-
-  # @spec sendfile(fd, t, offset, len, opts) ::
-  # def sendfile(fd, {:plain, socket}, offset, len, opts) do
-  #   :file.sendfile(fd, socket, offset, len, opts)
-  # end
-  # def sendfile(_fd, {:tls, _}, _offset, _length, _opts) do
-  #   raise(SendfileError, message: "ssl sendfile not supported") # what about freebsd?
-  # end
 
   @doc """
   Returns the address and port for the other end of a connection.
@@ -150,7 +96,4 @@ defmodule Nelli.Socket do
   def peername({:plain, socket}) do
     :inet.peername(socket)
   end
-  # def peername({:tls, socket}) do
-  #   :ssl.peername(socket)
-  # end
 end
